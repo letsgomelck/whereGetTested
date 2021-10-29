@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Home Page</title>
+    <!--引入bootstrap样式-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!--引入bootstrap-table样式-->
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <!--jquery-->
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--bootstrap-table.min.js-->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+    <meta name='viewport'
+          content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.69.1/maps/maps.css'>
+    <link rel='stylesheet' type='text/css' href='../assets/ui-library/index.css'/>
+</head>
+<body>
+
+
+    <h1 align="center">User Homepage</h1>
+    <br><br><br>
+    <div class="row">
+        <div class="col-md-3">
+            <h4><a href="Form.html">Submit Testing Form</a></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h4><a href="FamilyForm.html">Submit Family Testing Form</a></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h4><a href="UserDetail.html">Edit Personal Details</a></h4>
+        </div>
+    </div>
+
+
+
+
+<br><br><br>
+
+    <img src="../imgs/map.PNG" alt="Testing site map" width="500">
+    <h3>Map</h3>
+    <!--The div element for the map -->
+    <div id='map' class='map'></div>
+    <script src='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.69.1/maps/maps-web.min.js'></script>
+    <script type='text/javascript' src='../assets/js/mobile-or-tablet.js'></script>
+    <script>
+        var map = tt.map({
+            key: '<your-tomtom-maps-API-key>',
+            container: 'map',
+            style: 'tomtom://vector/1/basic-main',
+            dragPan: !isMobileOrTablet()
+        });
+        map.addControl(new tt.FullscreenControl());
+        map.addControl(new tt.NavigationControl()); </script>
+<br><br><br><br><br><br>
+
+
+
+    <div class="container">
+        <table id="sitestable" border="1" cellspacing="0">
+            <thead>
+                <tr>
+                    <th data-sortable="true">Name</th>
+                    <th data-sortable="true">Address</th>
+                    <th>Status</th>
+                    <th data-sortable="true">Waiting time</th>
+                    <th>Open period</th>
+                    <th data-sortable="true">People in queue</th>
+                    <th>Type</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div> <br>
+
+<script type="text/javascript">
+
+    $.ajax({
+        type: "POST",
+        url: "checkSites",
+        success: function (data) {
+            console.log(data);
+            insertTable(data);
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    });
+
+    function insertTable(data) {
+        let oTbody = $("tbody");
+        for (let i = 0; i < data.length; i++) {
+            oTbody.append(
+                `<tr>
+            <td>${data[i].name}</td>
+            <td>${data[i].address}</td>
+            <td>${data[i].status}</td>
+            <td>${data[i].waitingTime}</td>
+            <td>${data[i].openPeriod}</td>
+            <td>${data[i].people}</td>
+            <td>${data[i].type}</td>
+            <td><a href="${data[i].link}">This Direction</a></td>
+        </tr>`
+            );
+        }
+
+        // let oInput = $("");
+        // oInput.val("sfdsfsdfsd");
+
+        $("#sitestable").bootstrapTable({
+            classes: "table table-hover table-striped"
+        })
+    }
+</script>
+
+</body>
+</html>
